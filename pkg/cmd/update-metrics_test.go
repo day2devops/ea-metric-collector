@@ -53,7 +53,7 @@ func TestNewUpdateMetricsCmd_FlagDefaults(t *testing.T) {
 	cmd, umc := newUpdateMetricsCmd()
 	cmd.ParseFlags([]string{})
 
-	assert.Equal(t, "https://github.com/", umc.baseURL)
+	assert.Equal(t, "https://api.github.com/", umc.baseURL)
 	assert.True(t, strings.Contains(umc.dataDir, ".git-metrics"))
 	assert.Equal(t, "day2devops", umc.org)
 	assert.Equal(t, "", umc.repo)
