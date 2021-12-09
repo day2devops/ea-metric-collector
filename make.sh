@@ -38,17 +38,17 @@ compile() {
     echo " "
     echo "*** COMPILING PACKAGE(S): $1"
     echo " "
-    GIT_VERSION_PATH=github.edwardjones.com/ej/ea-github-metric-extractor/pkg/version.gitVersion
+    GIT_VERSION_PATH=github.com/ej/ea-metric-extractor/pkg/version.gitVersion
     GIT_VERSION=$(git describe --abbrev=0 --tags | cut -b 2-)
 
     if [ "$GIT_VERSION"  == "" ]; then
       echo "no git version available, default to 0.1"
       GIT_VERSION="0.1"
     fi
-    GIT_COMMIT_PATH=github.edwardjones.com/ej/ea-github-metric-extractor/pkg/version.gitCommit
+    GIT_COMMIT_PATH=github.com/ej/ea-metric-extractor/pkg/version.gitCommit
     GIT_COMMIT=$(git rev-parse HEAD | cut -b -8)
     SOURCE_DATE_EPOCH=$(git show -s --format=format:%ct HEAD)
-    BUILD_DATE_PATH=github.edwardjones.com/ej/ea-github-metric-extractor/pkg/version.buildDate
+    BUILD_DATE_PATH=github.com/ej/ea-metric-extractor/pkg/version.buildDate
     DATE_FMT="%Y-%m-%dT%H:%M:%SZ"
     BUILD_DATE=$(date -u -d "@$SOURCE_DATE_EPOCH" "+${DATE_FMT}" 2>/dev/null || date -u -r "${SOURCE_DATE_EPOCH}" "+${DATE_FMT}" 2>/dev/null || date -u "+${DATE_FMT}")
     LDFLAGS="-X ${GIT_VERSION_PATH}=${GIT_VERSION} -X ${GIT_COMMIT_PATH}=${GIT_COMMIT} -X ${BUILD_DATE_PATH}=${BUILD_DATE}"
