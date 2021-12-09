@@ -127,6 +127,7 @@ func (m Manager) skipRepositoryNotUpdated(r github.Repository) bool {
 	}
 
 	// Skip when repository updated before the cached as of timestamp
+	glog.V(3).Infof("Comparing update time of %s to metric update time %s", r.Changed, metrics.AsOf)
 	return r.Changed.Before(*metrics.AsOf)
 }
 

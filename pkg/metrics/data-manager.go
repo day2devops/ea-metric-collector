@@ -7,6 +7,7 @@ import (
 
 // CacheStats represents data about the overall cache of repository metrics
 type CacheStats struct {
+	Org       string     `json:"org"`
 	UpdatedAt *time.Time `json:"updatedAt"`
 }
 
