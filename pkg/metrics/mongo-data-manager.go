@@ -12,10 +12,10 @@ import (
 
 // MongoDataManager mongo based implementation of MetricDataManager
 type MongoDataManager struct {
-	User   string
-	Pwd    string
-	Server string
-	client *mongo.Client
+	User             string
+	Pwd              string
+	ConnectionString string
+	client           *mongo.Client
 }
 
 // StoreMetrics Persist the supplied metrics
@@ -118,7 +118,7 @@ func (mdm MongoDataManager) connect() (*mongo.Client, error) {
 			Username:      mdm.User,
 			Password:      mdm.Pwd,
 		}
-		clientOps := options.Client().ApplyURI("mongodb+srv://cluster0.gw6i3.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+		clientOps := options.Client().ApplyURI(mdm.ConnectionString)
 		clientOps.Auth = &creds
 		client, err := mongo.Connect(ctx, clientOps)
 		if err != nil {

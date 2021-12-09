@@ -94,11 +94,11 @@ func (umc UpdateMetricsCommand) UpdateMetricsCmd() error {
 	var dataMgr metrics.DataManager
 	dataMgr = metrics.FileDataManager{DataDir: umc.dataDir}
 	if umc.mongo {
-		user, pwd, err := mongoUserPassword()
+		user, pwd, conn, err := mongoConnectionInfo()
 		if err != nil {
 			return err
 		}
-		dataMgr = metrics.MongoDataManager{User: user, Pwd: pwd}
+		dataMgr = metrics.MongoDataManager{User: user, Pwd: pwd, ConnectionString: conn}
 	}
 
 	dataCollector := github.RepositoryDataCollector{GitHubClient: client}
@@ -134,11 +134,12 @@ func defaultDataDir(userHomeDir func() (string, error)) string {
 }
 
 // retrieves mongo authorization items
-func mongoUserPassword() (string, string, error) {
-	user := os.Getenv("MONGO_USER")
-	pwd := os.Getenv("MONGO_PWD")
-	if user == "" || pwd == "" {
-		return "", "", errors.New("mongo user/pwd not specified")
+func mongoConnectionInfo() (user string, pwd string, connection string, err error) {
+	user = os.Getenv("MONGO_USER")
+	pwd = os.Getenv("MONGO_PWD")
+	connection = os.Getenv("MONGO_CONN")
+	if user == "" || pwd == "" || connection == "" {
+		return "", "", "", errors.New("mongo user/pwd/connection not specified")
 	}
-	return user, pwd, nil
+	return
 }
