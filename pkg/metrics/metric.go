@@ -11,55 +11,55 @@ import (
 
 // GitRepositoryMetric defines structure for tracking GH metrics
 type GitRepositoryMetric struct {
-	ID             int64             `json:"id"`
-	Org            string            `json:"org"`
-	RepositoryName string            `json:"repositoryName"`
-	Created        *time.Time        `json:"created"`
-	Updated        *time.Time        `json:"updated"`
-	Pushed         *time.Time        `json:"pushed"`
-	DefaultBranch  string            `json:"defaultBranch"`
-	Squashable     bool              `json:"squashable"`
-	Rebaseable     bool              `json:"rebaseable"`
-	Protected      bool              `json:"protected"`
-	BranchCount    int               `json:"branchCount"`
-	ReleaseCount   int               `json:"releaseCount"`
-	CommitCount    int               `json:"commitCount"`
-	CodeLineCount  int               `json:"codeLineCount"`
-	PullRequest    PullRequestMetric `json:"pullRequest"`
-	Build          BuildMetric       `json:"build"`
-	CodeQuality    CodeQualityMetric `json:"codeQuality"`
-	AsOf           *time.Time        `json:"asOf"`
+	ID             int64             `json:"id" bson:"id"`
+	Org            string            `json:"org" bson:"org"`
+	RepositoryName string            `json:"repositoryName" bson:"repositoryName"`
+	Created        *time.Time        `json:"created" bson:"created"`
+	Updated        *time.Time        `json:"updated" bson:"updated"`
+	Pushed         *time.Time        `json:"pushed" bson:"pushed"`
+	DefaultBranch  string            `json:"defaultBranch" bson:"defaultBranch"`
+	Squashable     bool              `json:"squashable" bson:"squashable"`
+	Rebaseable     bool              `json:"rebaseable" bson:"rebaseable"`
+	Protected      bool              `json:"protected" bson:"protected"`
+	BranchCount    int               `json:"branchCount" bson:"branchCount"`
+	ReleaseCount   int               `json:"releaseCount" bson:"releaseCount"`
+	CommitCount    int               `json:"commitCount" bson:"commitCount"`
+	CodeLineCount  int               `json:"codeLineCount" bson:"codeLineCount"`
+	PullRequest    PullRequestMetric `json:"pullRequest" bson:"pullRequest"`
+	Build          BuildMetric       `json:"build" bson:"build"`
+	CodeQuality    CodeQualityMetric `json:"codeQuality" bson:"codeQuality"`
+	AsOf           *time.Time        `json:"asOf" bson:"asOf"`
 }
 
 // PullRequestMetric defines structure for pull request metrics
 type PullRequestMetric struct {
-	CreatedTodayCount       int     `json:"createdTodayCount"`
-	CreatedWeekCount        int     `json:"createdWeekCount"`
-	CreatedMonthCount       int     `json:"createdMonthCount"`
-	MergedTodayCount        int     `json:"mergedTodayCount"`
-	MergedWeekCount         int     `json:"mergedWeekCount"`
-	MergedMonthCount        int     `json:"mergedMonthCount"`
-	AvgMinutesOpenLastMonth float32 `json:"avgMinutesOpenLastMonth"`
+	CreatedTodayCount       int     `json:"createdTodayCount" bson:"createdTodayCount"`
+	CreatedWeekCount        int     `json:"createdWeekCount" bson:"createdWeekCount"`
+	CreatedMonthCount       int     `json:"createdMonthCount" bson:"createdMonthCount"`
+	MergedTodayCount        int     `json:"mergedTodayCount" bson:"mergedTodayCount"`
+	MergedWeekCount         int     `json:"mergedWeekCount" bson:"mergedWeekCount"`
+	MergedMonthCount        int     `json:"mergedMonthCount" bson:"mergedMonthCount"`
+	AvgMinutesOpenLastMonth float32 `json:"avgMinutesOpenLastMonth" bson:"avgMinutesOpenLastMonth"`
 }
 
 // BuildMetric defines structure for build metrics
 type BuildMetric struct {
-	BuildsTodayCount         int     `json:"buildsTodayCount"`
-	BuildsWeekCount          int     `json:"buildsWeekCount"`
-	BuildsMonthCount         int     `json:"buildsMonthCount"`
-	AvgBuildMinutesLastMonth float32 `json:"avgBuildMinutesLastMonth"`
+	BuildsTodayCount         int     `json:"buildsTodayCount" bson:"buildsTodayCount"`
+	BuildsWeekCount          int     `json:"buildsWeekCount" bson:"buildsWeekCount"`
+	BuildsMonthCount         int     `json:"buildsMonthCount" bson:"buildsMonthCount"`
+	AvgBuildMinutesLastMonth float32 `json:"avgBuildMinutesLastMonth" bson:"avgBuildMinutesLastMonth"`
 }
 
 // CodeQualityMetric defines structure for code quality metrics
 type CodeQualityMetric struct {
-	BlockerCount    int     `json:"blockerCount"`
-	CriticalCount   int     `json:"criticalCount"`
-	MajorCount      int     `json:"majorCount"`
-	IssueCount      int     `json:"issueCount"`
-	TestCount       int     `json:"testCount"`
-	TestErrorCount  int     `json:"testErrorCount"`
-	TestFailCount   int     `json:"testFailCount"`
-	TestCoveragePct float32 `json:"testCoveragePct"`
+	BlockerCount    int     `json:"blockerCount" bson:"blockerCount"`
+	CriticalCount   int     `json:"criticalCount" bson:"criticalCount"`
+	MajorCount      int     `json:"majorCount" bson:"majorCount"`
+	IssueCount      int     `json:"issueCount" bson:"issueCount"`
+	TestCount       int     `json:"testCount" bson:"testCount"`
+	TestErrorCount  int     `json:"testErrorCount" bson:"testErrorCount"`
+	TestFailCount   int     `json:"testFailCount" bson:"testFailCount"`
+	TestCoveragePct float32 `json:"testCoveragePct" bson:"testCoveragePct"`
 }
 
 // newGitRepositoryMetric extract desired metrics for the supplied repository

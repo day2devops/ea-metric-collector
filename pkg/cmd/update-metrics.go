@@ -41,6 +41,7 @@ type UpdateMetricsCommand struct {
 	repo                string
 	forceUpdate         bool
 	forceEvalAll        bool
+	mongo               bool
 	gitHubClientFactory github.ClientCreator
 	processorFactory    metrics.ProcessorCreator
 }
@@ -68,6 +69,7 @@ func newUpdateMetricsCmd() (*cobra.Command, *UpdateMetricsCommand) {
 	updateMetricsCmd.Flags().StringVar(&umc.dataDir, "dataDir", defaultDataDir(os.UserHomeDir), "Override the default data directory")
 	updateMetricsCmd.Flags().BoolVar(&umc.forceUpdate, "forceUpdate", false, "Force updates of repositories regardless of last update timestamp")
 	updateMetricsCmd.Flags().BoolVar(&umc.forceEvalAll, "forceEvalAll", false, "Force evaluation of all repositories regardless of cache statistics")
+	updateMetricsCmd.Flags().BoolVar(&umc.mongo, "mongo", false, "Leverage mongodb for metric persistence")
 	return updateMetricsCmd, &umc
 }
 
@@ -89,14 +91,19 @@ func (umc UpdateMetricsCommand) UpdateMetricsCmd() error {
 	// build metric manager and execute based on command args
 	glog.V(2).Infof("Using metric data directory: %s", umc.dataDir)
 
-	processor := umc.processorFactory.NewProcessor(
-		github.RepositoryDataCollector{
-			GitHubClient: client,
-		},
-		metrics.FileDataManager{
-			DataDir: umc.dataDir,
-		},
-	)
+	var dataMgr metrics.DataManager
+	dataMgr = metrics.FileDataManager{DataDir: umc.dataDir}
+	if umc.mongo {
+		user, pwd, conn, err := mongoConnectionInfo()
+		if err != nil {
+			return err
+		}
+		dataMgr = metrics.MongoDataManager{User: user, Pwd: pwd, ConnectionString: conn}
+	}
+
+	dataCollector := github.RepositoryDataCollector{GitHubClient: client}
+
+	processor := umc.processorFactory.NewProcessor(dataCollector, dataMgr)
 
 	if umc.repo == "" {
 		return processor.RepositoriesForOrg(umc.org, metrics.Options{
@@ -124,4 +131,15 @@ func defaultDataDir(userHomeDir func() (string, error)) string {
 		userDir = "."
 	}
 	return filepath.Join(userDir, ".git-metrics")
+}
+
+// retrieves mongo authorization items
+func mongoConnectionInfo() (user string, pwd string, connection string, err error) {
+	user = os.Getenv("MONGO_USER")
+	pwd = os.Getenv("MONGO_PWD")
+	connection = os.Getenv("MONGO_CONN")
+	if user == "" || pwd == "" || connection == "" {
+		return "", "", "", errors.New("mongo user/pwd/connection not specified")
+	}
+	return
 }
