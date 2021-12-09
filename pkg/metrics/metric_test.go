@@ -12,9 +12,10 @@ import (
 
 func Test_newGitRepositoryMetric(t *testing.T) {
 	r := github.Repository{
-		ID:   int64(123),
-		Org:  "test-org",
-		Name: "test-repo",
+		ID:     int64(123),
+		Org:    "test-org",
+		Name:   "test-repo",
+		Topics: []string{"portfolio-myport", "product-myprod", "team-myteam"},
 		Detail: &gogithub.Repository{
 			ID:               gogithub.Int64(123),
 			Name:             gogithub.String("test-repo"),
@@ -33,6 +34,9 @@ func Test_newGitRepositoryMetric(t *testing.T) {
 	assert.Equal(t, int64(123), metrics.ID)
 	assert.Equal(t, "test-org", metrics.Org)
 	assert.Equal(t, "test-repo", metrics.RepositoryName)
+	assert.Equal(t, "myport", metrics.Portfolio)
+	assert.Equal(t, "myprod", metrics.Product)
+	assert.Equal(t, "myteam", metrics.Team)
 	assert.Equal(t, r.Detail.CreatedAt.Time, *metrics.Created)
 	assert.Equal(t, r.Detail.UpdatedAt.Time, *metrics.Updated)
 	assert.Equal(t, r.Detail.PushedAt.Time, *metrics.Pushed)
@@ -62,6 +66,9 @@ func Test_newGitRepositoryMetric_MissingGitHubData(t *testing.T) {
 	assert.Equal(t, int64(123), metrics.ID)
 	assert.Equal(t, "test-org", metrics.Org)
 	assert.Equal(t, "test-repo", metrics.RepositoryName)
+	assert.Equal(t, "", metrics.Portfolio)
+	assert.Equal(t, "", metrics.Product)
+	assert.Equal(t, "", metrics.Team)
 	assert.Nil(t, metrics.Created)
 	assert.Nil(t, metrics.Updated)
 	assert.Nil(t, metrics.Pushed)

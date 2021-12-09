@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"strings"
 	"time"
 
 	"github.com/golang/glog"
@@ -14,6 +15,9 @@ type GitRepositoryMetric struct {
 	ID             int64             `json:"id" bson:"id"`
 	Org            string            `json:"org" bson:"org"`
 	RepositoryName string            `json:"repositoryName" bson:"repositoryName"`
+	Portfolio      string            `json:"portfolio" bson:"portfolio"`
+	Product        string            `json:"product" bson:"product"`
+	Team           string            `json:"team" bson:"team"`
 	Created        *time.Time        `json:"created" bson:"created"`
 	Updated        *time.Time        `json:"updated" bson:"updated"`
 	Pushed         *time.Time        `json:"pushed" bson:"pushed"`
@@ -72,6 +76,9 @@ func newGitRepositoryMetric(r *github.Repository) GitRepositoryMetric {
 		RepositoryName: r.Name,
 	}
 
+	metrics.Portfolio = parseTopic(r, "portfolio-")
+	metrics.Product = parseTopic(r, "product-")
+	metrics.Team = parseTopic(r, "team-")
 	metrics.Created = extractTime(r.Detail.CreatedAt)
 	metrics.Updated = extractTime(r.Detail.UpdatedAt)
 	metrics.Pushed = extractTime(r.Detail.PushedAt)
@@ -119,6 +126,16 @@ func newGitRepositoryMetric(r *github.Repository) GitRepositoryMetric {
 	now := time.Now().UTC()
 	metrics.AsOf = &now
 	return metrics
+}
+
+// parse the topic value if found using the supplied prefix
+func parseTopic(r *github.Repository, prefix string) string {
+	for _, topic := range r.Topics {
+		if strings.HasPrefix(topic, prefix) {
+			return strings.TrimPrefix(topic, prefix)
+		}
+	}
+	return ""
 }
 
 // determine if the default branch is protected

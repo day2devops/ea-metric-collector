@@ -210,6 +210,10 @@ func TestListRepositories_APIError(t *testing.T) {
 	assert.Nil(t, repos)
 }
 
+type TestRepositoryTopic struct {
+	Names []string
+}
+
 func TestGetRepository(t *testing.T) {
 	mockedHTTPClient := mock.NewMockedHTTPClient(
 		mock.WithRequestMatchPages(
@@ -244,6 +248,12 @@ func TestGetRepository(t *testing.T) {
 			},
 			[]github.RepositoryRelease{},
 		),
+		mock.WithRequestMatchPages(
+			mock.GetReposTopicsByOwnerByRepo,
+			TestRepositoryTopic{
+				Names: []string{"topic1", "topic2"},
+			},
+		),
 	)
 
 	c := github.NewClient(mockedHTTPClient)
@@ -264,6 +274,9 @@ func TestGetRepository(t *testing.T) {
 	assert.Equal(t, 2, len(repo.Releases))
 	assert.Equal(t, "release-1", *repo.Releases[0].Name)
 	assert.Equal(t, "release-2", *repo.Releases[1].Name)
+	assert.Equal(t, 2, len(repo.Topics))
+	assert.Equal(t, "topic1", repo.Topics[0])
+	assert.Equal(t, "topic2", repo.Topics[1])
 }
 
 func TestGetRepository_RepositoryAPIError(t *testing.T) {
