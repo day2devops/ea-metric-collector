@@ -6,6 +6,7 @@ import (
 
 	"github.com/golang/glog"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -46,7 +47,6 @@ func (mdm MongoDataManager) ReadMetrics(org string, repo string) (found bool, me
 		if err == mongo.ErrNoDocuments {
 			return false, nil, nil
 		}
-		glog.Warningf("Unable to read stats from mongo for org %s: %v", org, err)
 		return false, nil, err
 	}
 	found = true
@@ -56,20 +56,54 @@ func (mdm MongoDataManager) ReadMetrics(org string, repo string) (found bool, me
 // DeleteMetrics Delete the metrics for the supplied repository
 func (mdm MongoDataManager) DeleteMetrics(org string, repo string) error {
 	glog.V(2).Infof("Deleting metric data for repository %s/%s from mongo", org, repo)
-	return nil
+	collection, err := mdm.collection("metrics")
+	if err != nil {
+		return err
+	}
+
+	filter := bson.M{"org": org, "repositoryName": repo}
+	_, err = collection.DeleteOne(context.Background(), filter)
+	return err
 }
 
 // ListMetrics List the known repositories with metrics that match the supplied options
 func (mdm MongoDataManager) ListMetrics(opts ListMetricOptions) ([]Key, error) {
+	// get collection
 	glog.V(2).Infof("Listing repository metrics found in mongo")
-	_, err := mdm.collection("metrics")
+	collection, err := mdm.collection("metrics")
 	if err != nil {
 		return nil, err
 	}
 
-	var allKeys []Key
-	// filter := bson.M{"org": opts.orgFilter.String(), "repositoryName": repo}
+	// build filters based on the supplied filter options
+	filter := bson.D{}
+	if opts.orgFilter != nil {
+		filter = append(filter, bson.E{Key: "org", Value: bson.D{
+			{Key: "$regex", Value: primitive.Regex{Pattern: opts.orgFilter.String(), Options: "i"}},
+		}})
+	}
+	if opts.repoFilter != nil {
+		filter = append(filter, bson.E{Key: "repositoryName", Value: bson.D{
+			{Key: "$regex", Value: primitive.Regex{Pattern: opts.repoFilter.String(), Options: "i"}},
+		}})
+	}
 
+	// find all metrics and pull out keys
+	findOpts := options.FindOptions{Projection: bson.M{"org": 1, "repositoryName": 1}}
+	cursor, err := collection.Find(context.Background(), filter, &findOpts)
+	if err != nil {
+		return nil, err
+	}
+
+	var results []GitRepositoryMetric
+	if err = cursor.All(context.TODO(), &results); err != nil {
+		return nil, err
+	}
+
+	var allKeys []Key
+	for _, result := range results {
+		allKeys = append(allKeys, Key{Org: result.Org, Name: result.RepositoryName})
+	}
 	return allKeys, nil
 }
 
