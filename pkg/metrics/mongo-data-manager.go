@@ -64,7 +64,16 @@ func (mdm MongoDataManager) DeleteMetrics(org string, repo string) error {
 // ListMetrics List the known repositories with metrics that match the supplied options
 func (mdm MongoDataManager) ListMetrics(opts ListMetricOptions) ([]Key, error) {
 	glog.V(2).Infof("Listing repository metrics found in mongo")
+	client, err := mdm.connect()
+	if err != nil {
+		glog.Warning("Unable to connect to mongo", err)
+	}
+
 	var allKeys []Key
+
+	client.Database("devops_metrics").Collection("metrics")
+	// filter := bson.M{"org": opts.orgFilter.String(), "repositoryName": repo}
+
 	return allKeys, nil
 }
 
@@ -121,6 +130,10 @@ func (mdm MongoDataManager) connect() (*mongo.Client, error) {
 		clientOps := options.Client().ApplyURI(mdm.ConnectionString)
 		clientOps.Auth = &creds
 		client, err := mongo.Connect(ctx, clientOps)
+		if err != nil {
+			return nil, err
+		}
+		err = client.Ping(ctx, nil)
 		if err != nil {
 			return nil, err
 		}
