@@ -56,7 +56,7 @@ Program will expect `GITHUB_AUTH_TOKEN` to be populated with an access token tha
 
 ### GitHub Base URL
 
-Program will assume a base GitHub Enterprise url of `https:\\github.edwardjones.com\` but can be overriden using the `baseURL` flag.
+Program will assume a base GitHub Enterprise url of `https:\\github.com\` but can be overriden using the `baseURL` flag.
 
 ### Base Data Directory
 
@@ -64,13 +64,13 @@ Program will assume a base data directory of `.git-metrics` under the users home
 
 ### Command Examples
 
-Update Metrics For All Repositories (using default org of `ej`) changed since last update: Logs to Stderr and Debug Level On
+Update Metrics For All Repositories (using default org of `day2devops`) changed since last update: Logs to Stderr and Debug Level On
 
 ```bash
 ./git-what update-metrics --logtostderr --v 2
 ```
 
-Update Metrics For All Repositories (using default org of `ej`) regardless of last update: Logs to Stderr
+Update Metrics For All Repositories (using default org of `day2devops`) regardless of last update: Logs to Stderr
 
 ```bash
 ./git-what update-metrics --forceUpdate --logtostderr
@@ -79,7 +79,7 @@ Update Metrics For All Repositories (using default org of `ej`) regardless of la
 Update Metrics For All Repositories using specific organization
 
 ```bash
-./git-what update-metrics --org ejcodefest --logtostderr
+./git-what update-metrics --org sampleorg --logtostderr
 ```
 
 Update Metrics for a particular repository

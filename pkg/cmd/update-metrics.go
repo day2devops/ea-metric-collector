@@ -62,8 +62,8 @@ func newUpdateMetricsCmd() (*cobra.Command, *UpdateMetricsCommand) {
 		},
 	}
 
-	updateMetricsCmd.Flags().StringVar(&umc.baseURL, "baseURL", "https://github.edwardjones.com/", "Override the default base url")
-	updateMetricsCmd.Flags().StringVar(&umc.org, "org", "ej", "Override the default organization of repositories")
+	updateMetricsCmd.Flags().StringVar(&umc.baseURL, "baseURL", "https://github.com/", "Override the default base url")
+	updateMetricsCmd.Flags().StringVar(&umc.org, "org", "day2devops", "Override the default organization of repositories")
 	updateMetricsCmd.Flags().StringVar(&umc.repo, "repo", "", "Restrict update to the supplied repository name")
 	updateMetricsCmd.Flags().StringVar(&umc.dataDir, "dataDir", defaultDataDir(os.UserHomeDir), "Override the default data directory")
 	updateMetricsCmd.Flags().BoolVar(&umc.forceUpdate, "forceUpdate", false, "Force updates of repositories regardless of last update timestamp")
