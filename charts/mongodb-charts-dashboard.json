@@ -1,0 +1,840 @@
+{
+  "exportVersion": 6,
+  "dashboards": {
+    "dashboard-1": {
+      "description": "",
+      "embedding": {},
+      "filters": [
+        {
+          "type": "String",
+          "disabled": false,
+          "name": "portfolio",
+          "settings": {
+            "allOthers": true,
+            "values": []
+          },
+          "linkedFields": [
+            {
+              "dataSourceId": "data-source-1",
+              "fieldPath": "portfolio"
+            }
+          ]
+        },
+        {
+          "type": "String",
+          "disabled": false,
+          "name": "product",
+          "settings": {
+            "allOthers": true,
+            "values": []
+          },
+          "linkedFields": [
+            {
+              "dataSourceId": "data-source-1",
+              "fieldPath": "product"
+            }
+          ]
+        },
+        {
+          "type": "String",
+          "disabled": false,
+          "name": "repositoryName",
+          "settings": {
+            "allOthers": true,
+            "values": []
+          },
+          "linkedFields": [
+            {
+              "dataSourceId": "data-source-1",
+              "fieldPath": "repositoryName"
+            }
+          ]
+        }
+      ],
+      "layout": [
+        {
+          "i": "item-1",
+          "w": 9,
+          "h": 2,
+          "x": 0,
+          "y": 6
+        },
+        {
+          "i": "item-2",
+          "w": 3,
+          "h": 1,
+          "x": 3,
+          "y": 0
+        },
+        {
+          "i": "item-3",
+          "w": 3,
+          "h": 2,
+          "x": 6,
+          "y": 0
+        },
+        {
+          "i": "item-4",
+          "w": 3,
+          "h": 2,
+          "x": 6,
+          "y": 2
+        },
+        {
+          "i": "item-5",
+          "w": 3,
+          "h": 4,
+          "x": 0,
+          "y": 0
+        },
+        {
+          "i": "item-6",
+          "w": 9,
+          "h": 2,
+          "x": 0,
+          "y": 8
+        },
+        {
+          "i": "item-7",
+          "w": 3,
+          "h": 3,
+          "x": 3,
+          "y": 1
+        },
+        {
+          "i": "item-8",
+          "w": 9,
+          "h": 2,
+          "x": 0,
+          "y": 4
+        }
+      ],
+      "title": "eA-Team Dashboard"
+    }
+  },
+  "items": {
+    "item-1": {
+      "calculatedFields": [],
+      "channels": {
+        "x": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        },
+        "y": {
+          "channelType": "aggregation",
+          "field": "branchCount",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        }
+      },
+      "chartType": "Grouped Column",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "conditionalFormatting": [],
+        "axes": {
+          "x": {
+            "categoryLabelAngle": {
+              "enabled": true,
+              "value": "horizontal"
+            }
+          },
+          "y": {}
+        },
+        "channels": {
+          "x": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Github Repo"
+            }
+          },
+          "y": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Total"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          }
+        }
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "column-grouped",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "Number of Branches",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-2": {
+      "calculatedFields": [],
+      "channels": {
+        "value": {
+          "channelType": "aggregation",
+          "field": "codeByteCount",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        }
+      },
+      "chartType": "Number",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "axes": {},
+        "channels": {
+          "value": {
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          }
+        },
+        "conditionalFormatting": []
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "number",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "Bytes of Code",
+      "queryId": null,
+      "embedding": {
+        "anonymousAuthEnabled": true
+      }
+    },
+    "item-3": {
+      "calculatedFields": [],
+      "channels": {
+        "value": {
+          "channelType": "aggregation",
+          "field": "commitCount",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "label": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false,
+          "allOthers": true
+        }
+      },
+      "chartType": "Donut",
+      "convertedFields": [],
+      "customisations": {
+        "options": {
+          "dataValueLabels": {
+            "enabled": false,
+            "value": "value"
+          }
+        },
+        "axes": {},
+        "channels": {
+          "value": {
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "label": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repo"
+            }
+          }
+        },
+        "conditionalFormatting": []
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "donut",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "# of Commits by Repo",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-4": {
+      "calculatedFields": [],
+      "channels": {
+        "group": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        },
+        "group_series_0": {
+          "channelType": "category",
+          "field": "protected",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": true,
+          "nominalBinning": [
+            {
+              "label": "Yes",
+              "type": "select",
+              "value": [
+                "true"
+              ],
+              "_id": "97b8cffd-ac12-44b1-9a06-9116f203af00"
+            },
+            {
+              "label": "No",
+              "type": "select",
+              "value": [
+                "false"
+              ],
+              "_id": "509e9ccd-221d-4531-9d40-325484b5abc0"
+            }
+          ]
+        }
+      },
+      "chartType": "Data Table",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "conditionalFormatting": [],
+        "axes": {},
+        "channels": {
+          "group": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repo"
+            }
+          },
+          "group_series_0": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Protected?"
+            }
+          }
+        }
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "data-table",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "Has Protected Branches?",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-5": {
+      "calculatedFields": [],
+      "channels": {
+        "y": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        },
+        "x": {
+          "channelType": "aggregation",
+          "field": "pullRequests.minutesOpen",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "transformedType": "Number",
+          "aggregate": "mean"
+        }
+      },
+      "chartType": "Grouped Bar",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "conditionalFormatting": [],
+        "axes": {
+          "x": {}
+        },
+        "channels": {
+          "y": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repo Name"
+            }
+          },
+          "x": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Mean Pull Request Open time (in minutes)"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          }
+        }
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "bar-grouped",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {
+        "x": [
+          {
+            "dimensionality": 1,
+            "field": "pullRequests",
+            "type": "Unwind array",
+            "arguments": []
+          }
+        ]
+      },
+      "sample": false,
+      "title": "Mean PR Open time",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-6": {
+      "calculatedFields": [],
+      "channels": {
+        "group": {
+          "channelType": "category",
+          "field": "pullRequests.status",
+          "inferredType": "String",
+          "type": "nominal",
+          "transformedType": "String",
+          "isBinning": false
+        },
+        "value": {
+          "channelType": "aggregation",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "quantitative",
+          "aggregate": "count"
+        },
+        "dynamicColumns": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        }
+      },
+      "chartType": "Data Table",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "conditionalFormatting": [],
+        "axes": {},
+        "channels": {
+          "group": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "PR Status"
+            }
+          },
+          "value": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repo"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "dynamicColumns": {}
+        }
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "data-table",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {
+        "group": [
+          {
+            "dimensionality": 1,
+            "field": "pullRequests",
+            "type": "Unwind array",
+            "arguments": []
+          }
+        ]
+      },
+      "sample": false,
+      "title": "Pull Request Status",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-7": {
+      "calculatedFields": [],
+      "channels": {
+        "group": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        }
+      },
+      "chartType": "Data Table",
+      "convertedFields": [],
+      "customisations": {
+        "options": {
+          "totalsColumn": {
+            "enabled": false,
+            "value": null
+          }
+        },
+        "conditionalFormatting": [],
+        "axes": {},
+        "channels": {
+          "group": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repos"
+            }
+          }
+        }
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [
+        {
+          "fieldPath": "defaultBranch",
+          "type": "String",
+          "disabled": false,
+          "settings": {
+            "allOthers": true,
+            "values": [
+              "main"
+            ]
+          }
+        }
+      ],
+      "iconValue": "data-table",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "Repos using master",
+      "queryId": null,
+      "embedding": {}
+    },
+    "item-8": {
+      "calculatedFields": [],
+      "channels": {
+        "x": {
+          "channelType": "aggregation",
+          "field": "languages.CSS",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_0": {
+          "channelType": "aggregation",
+          "field": "languages.Go",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_1": {
+          "channelType": "aggregation",
+          "field": "languages.HTML",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_2": {
+          "channelType": "aggregation",
+          "field": "languages.Java",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_3": {
+          "channelType": "aggregation",
+          "field": "languages.JavaScript",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_4": {
+          "channelType": "aggregation",
+          "field": "languages.Shell",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "y": {
+          "channelType": "category",
+          "field": "repositoryName",
+          "inferredType": "String",
+          "type": "nominal",
+          "isBinning": false
+        },
+        "x_series_5": {
+          "channelType": "aggregation",
+          "field": "languages.Batchfile",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_6": {
+          "channelType": "aggregation",
+          "field": "languages.C",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_7": {
+          "channelType": "aggregation",
+          "field": "languages.Assembly",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_8": {
+          "channelType": "aggregation",
+          "field": "languages.Kotlin",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_9": {
+          "channelType": "aggregation",
+          "field": "languages.TypeScript",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        },
+        "x_series_10": {
+          "channelType": "aggregation",
+          "field": "languages.Python",
+          "inferredType": "Number",
+          "type": "quantitative",
+          "aggregate": "sum"
+        }
+      },
+      "chartType": "Stacked Bar",
+      "convertedFields": [],
+      "customisations": {
+        "options": {},
+        "axes": {
+          "x": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Bytes of Code"
+            }
+          }
+        },
+        "channels": {
+          "x": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "CSS"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_0": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Go"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_1": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "HTML"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_2": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Java"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_3": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Javascript"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_4": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Shell"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "y": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Repository Name"
+            }
+          },
+          "x_series_5": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Batch"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_6": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "C"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_7": {
+            "labelOverride": {
+              "enabled": true,
+              "value": ".Assembly"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_8": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Kotlin"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_9": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Typescript"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          },
+          "x_series_10": {
+            "labelOverride": {
+              "enabled": true,
+              "value": "Python"
+            },
+            "numberFormatting": {
+              "enabled": true,
+              "value": "Default"
+            }
+          }
+        },
+        "conditionalFormatting": []
+      },
+      "dashboardId": "dashboard-1",
+      "dataSourceId": "data-source-1",
+      "description": "",
+      "filters": [],
+      "iconValue": "bar-stacked",
+      "interactiveFiltering": "highlight",
+      "itemType": "chart",
+      "lookupFields": [],
+      "meta": {},
+      "missedFields": [],
+      "query": null,
+      "reductions": {},
+      "sample": false,
+      "title": "Languages by Bytes of Code",
+      "queryId": null,
+      "embedding": {}
+    }
+  },
+  "dataSources": {
+    "data-source-1": {
+      "alias": "devops_metrics.metrics",
+      "collection": "metrics",
+      "database": "devops_metrics",
+      "deployment": "Cluster0",
+      "sourceType": "cluster"
+    }
+  },
+  "queries": {}
+}
