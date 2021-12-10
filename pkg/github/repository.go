@@ -21,6 +21,7 @@ type Repository struct {
 	Branches     []*gogithub.Branch
 	Releases     []*gogithub.RepositoryRelease
 	PullRequests []*gogithub.PullRequest
+	Contributors []*gogithub.ContributorStats
 	Languages    map[string]int
 }
 
@@ -133,6 +134,15 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		return err
 	})
 
+	var contributors []*gogithub.ContributorStats
+	grp.Go(func() error {
+		c, err := m.GetContributorStats(org, name)
+		if err == nil {
+			contributors = c
+		}
+		return err
+	})
+
 	if err := grp.Wait(); err != nil {
 		return nil, err
 	}
@@ -149,6 +159,7 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		Releases:     releases,
 		PullRequests: pullRequests,
 		Languages:    languages,
+		Contributors: contributors,
 	}, nil
 }
 
@@ -300,6 +311,17 @@ func (m RepositoryDataCollector) GetTopics(org string, repo string) ([]string, e
 		return nil, err
 	}
 	return topics, nil
+}
+
+// GetContributorStats retrieves contributor stats by organization/repo
+func (m RepositoryDataCollector) GetContributorStats(org string, repo string) ([]*gogithub.ContributorStats, error) {
+	ctx := context.Background()
+	glog.V(2).Infof("Collecting contributors for %s/%s", org, repo)
+	contributors, _, err := m.GitHubClient.Repositories.ListContributorsStats(ctx, org, repo)
+	if err != nil {
+		glog.Warning("Error collecting contributors: ", err)
+	}
+	return contributors, nil
 }
 
 // find repositories change after supplied time using supplied sort (updated, pushed, or created)

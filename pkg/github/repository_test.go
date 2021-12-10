@@ -2,6 +2,7 @@ package github
 
 import (
 	"flag"
+	"log"
 	"net/http"
 	"testing"
 	"time"
@@ -13,7 +14,10 @@ import (
 
 func init() {
 	// Turn on trace to enable all variable logging code
-	flag.Lookup("v").Value.Set("3")
+	err := flag.Lookup("v").Value.Set("3")
+	if err != nil {
+		log.Fatal("unable to set log level to trace: ", err)
+	}
 }
 
 func TestListRepositories(t *testing.T) {
@@ -248,13 +252,13 @@ func TestGetRepository(t *testing.T) {
 			},
 			[]github.RepositoryRelease{},
 		),
-		mock.WithRequestMatchPages(
+		mock.WithRequestMatch(
 			mock.GetReposTopicsByOwnerByRepo,
 			TestRepositoryTopic{
 				Names: []string{"topic1", "topic2"},
 			},
 		),
-		mock.WithRequestMatchPages(
+		mock.WithRequestMatch(
 			mock.GetReposLanguagesByOwnerByRepo,
 			map[string]int{"Go": 5000, "Bash": 2000},
 		),
@@ -269,6 +273,17 @@ func TestGetRepository(t *testing.T) {
 				},
 			},
 			[]github.PullRequest{},
+		),
+		mock.WithRequestMatch(
+			mock.GetReposStatsContributorsByOwnerByRepo,
+			[]github.ContributorStats{
+				{
+					Author: &github.Contributor{ID: github.Int64(1001)},
+				},
+				{
+					Author: &github.Contributor{ID: github.Int64(1002)},
+				},
+			},
 		),
 	)
 
@@ -299,6 +314,7 @@ func TestGetRepository(t *testing.T) {
 	assert.Equal(t, 2, len(repo.Languages))
 	assert.Equal(t, 5000, repo.Languages["Go"])
 	assert.Equal(t, 2000, repo.Languages["Bash"])
+	assert.Equal(t, 2, len(repo.Contributors))
 }
 
 func TestGetRepository_RepositoryAPIError(t *testing.T) {
