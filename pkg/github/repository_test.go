@@ -255,6 +255,10 @@ func TestGetRepository(t *testing.T) {
 			},
 		),
 		mock.WithRequestMatchPages(
+			mock.GetReposLanguagesByOwnerByRepo,
+			map[string]int{"Go": 5000, "Bash": 2000},
+		),
+		mock.WithRequestMatchPages(
 			mock.GetReposPullsByOwnerByRepo,
 			[]github.PullRequest{
 				{
@@ -292,6 +296,9 @@ func TestGetRepository(t *testing.T) {
 	assert.Equal(t, 2, len(repo.Topics))
 	assert.Equal(t, "topic1", repo.Topics[0])
 	assert.Equal(t, "topic2", repo.Topics[1])
+	assert.Equal(t, 2, len(repo.Languages))
+	assert.Equal(t, 5000, repo.Languages["Go"])
+	assert.Equal(t, 2000, repo.Languages["Bash"])
 }
 
 func TestGetRepository_RepositoryAPIError(t *testing.T) {

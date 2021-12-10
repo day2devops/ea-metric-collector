@@ -21,6 +21,7 @@ type Repository struct {
 	Branches     []*gogithub.Branch
 	Releases     []*gogithub.RepositoryRelease
 	PullRequests []*gogithub.PullRequest
+	Languages    map[string]int
 }
 
 // DataCollector defines methods for repository management
@@ -114,6 +115,15 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		return err
 	})
 
+	var languages map[string]int
+	grp.Go(func() error {
+		l, err := m.GetLanguages(org, name)
+		if err == nil {
+			languages = l
+		}
+		return err
+	})
+
 	var topics []string
 	grp.Go(func() error {
 		t, err := m.GetTopics(org, name)
@@ -138,6 +148,7 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		Branches:     branches,
 		Releases:     releases,
 		PullRequests: pullRequests,
+		Languages:    languages,
 	}, nil
 }
 
@@ -267,6 +278,17 @@ func (m RepositoryDataCollector) GetPullRequests(org string, repo string) ([]*go
 		opt.Page = resp.NextPage
 	}
 	return allPullRequests, nil
+}
+
+// GetLanguages retrieves language usage by organization/repo
+func (m RepositoryDataCollector) GetLanguages(org string, repo string) (map[string]int, error) {
+	ctx := context.Background()
+	glog.V(2).Infof("Collecting languages for %s/%s", org, repo)
+	languages, _, err := m.GitHubClient.Repositories.ListLanguages(ctx, org, repo)
+	if err != nil {
+		return nil, err
+	}
+	return languages, nil
 }
 
 // GetTopics retrieves topics by organization/repo

@@ -29,6 +29,7 @@ type GitRepositoryMetric struct {
 	ReleaseCount   int                 `json:"releaseCount" bson:"releaseCount"`
 	CommitCount    int                 `json:"commitCount" bson:"commitCount"`
 	CodeLineCount  int                 `json:"codeLineCount" bson:"codeLineCount"`
+	Languages      map[string]int      `json:"languages" bson:"languages"`
 	PullRequests   []PullRequestMetric `json:"pullRequests" bson:"pullRequests"`
 	Build          BuildMetric         `json:"build" bson:"build"`
 	CodeQuality    CodeQualityMetric   `json:"codeQuality" bson:"codeQuality"`
@@ -95,9 +96,14 @@ func newGitRepositoryMetric(r *github.Repository) GitRepositoryMetric {
 	// Process pull request data
 	metrics.PullRequests = mapPullRequests(r.PullRequests)
 
+	// Process language data
+	metrics.Languages = r.Languages
+	for _, cnt := range metrics.Languages {
+		metrics.CodeLineCount += cnt
+	}
+
 	// Mock data for NOW on other metrics
 	metrics.CommitCount = 101
-	metrics.CodeLineCount = 5000
 	metrics.Build = BuildMetric{
 		BuildsTodayCount:         10,
 		BuildsWeekCount:          25,
