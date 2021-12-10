@@ -102,8 +102,12 @@ func newGitRepositoryMetric(r *github.Repository) GitRepositoryMetric {
 		metrics.CodeByteCount += cnt
 	}
 
+	// Process commits
+	for _, c := range r.Contributors {
+		metrics.CommitCount += c.GetTotal()
+	}
+
 	// Mock data for NOW on other metrics
-	metrics.CommitCount = 101
 	metrics.Build = BuildMetric{
 		BuildsTodayCount:         10,
 		BuildsWeekCount:          25,
