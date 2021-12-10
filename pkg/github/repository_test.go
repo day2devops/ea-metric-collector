@@ -254,6 +254,18 @@ func TestGetRepository(t *testing.T) {
 				Names: []string{"topic1", "topic2"},
 			},
 		),
+		mock.WithRequestMatchPages(
+			mock.GetReposPullsByOwnerByRepo,
+			[]github.PullRequest{
+				{
+					Title: github.String("pr1"),
+				},
+				{
+					Title: github.String("pr2"),
+				},
+			},
+			[]github.PullRequest{},
+		),
 	)
 
 	c := github.NewClient(mockedHTTPClient)
@@ -274,6 +286,9 @@ func TestGetRepository(t *testing.T) {
 	assert.Equal(t, 2, len(repo.Releases))
 	assert.Equal(t, "release-1", *repo.Releases[0].Name)
 	assert.Equal(t, "release-2", *repo.Releases[1].Name)
+	assert.Equal(t, 2, len(repo.PullRequests))
+	assert.Equal(t, "pr1", *repo.PullRequests[0].Title)
+	assert.Equal(t, "pr2", *repo.PullRequests[1].Title)
 	assert.Equal(t, 2, len(repo.Topics))
 	assert.Equal(t, "topic1", repo.Topics[0])
 	assert.Equal(t, "topic2", repo.Topics[1])

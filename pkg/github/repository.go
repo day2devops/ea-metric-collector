@@ -12,14 +12,15 @@ import (
 
 // Repository represents the minimal repository identifiers
 type Repository struct {
-	ID       int64
-	Org      string
-	Name     string
-	Topics   []string
-	Changed  *time.Time
-	Detail   *gogithub.Repository
-	Branches []*gogithub.Branch
-	Releases []*gogithub.RepositoryRelease
+	ID           int64
+	Org          string
+	Name         string
+	Topics       []string
+	Changed      *time.Time
+	Detail       *gogithub.Repository
+	Branches     []*gogithub.Branch
+	Releases     []*gogithub.RepositoryRelease
+	PullRequests []*gogithub.PullRequest
 }
 
 // DataCollector defines methods for repository management
@@ -104,6 +105,15 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		return err
 	})
 
+	var pullRequests []*gogithub.PullRequest
+	grp.Go(func() error {
+		p, err := m.GetPullRequests(org, name)
+		if err == nil {
+			pullRequests = p
+		}
+		return err
+	})
+
 	var topics []string
 	grp.Go(func() error {
 		t, err := m.GetTopics(org, name)
@@ -119,14 +129,15 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 
 	// Build repository output
 	return &Repository{
-		ID:       *ghRepo.ID,
-		Org:      org,
-		Name:     name,
-		Topics:   topics,
-		Changed:  extractLastChangeTS(ghRepo),
-		Detail:   ghRepo,
-		Branches: branches,
-		Releases: releases,
+		ID:           *ghRepo.ID,
+		Org:          org,
+		Name:         name,
+		Topics:       topics,
+		Changed:      extractLastChangeTS(ghRepo),
+		Detail:       ghRepo,
+		Branches:     branches,
+		Releases:     releases,
+		PullRequests: pullRequests,
 	}, nil
 }
 
@@ -212,6 +223,50 @@ func (m RepositoryDataCollector) GetReleases(org string, repo string) ([]*gogith
 		opt.Page = resp.NextPage
 	}
 	return allReleases, nil
+}
+
+// GetPullRequests retrieves pull requests by organization/repo
+func (m RepositoryDataCollector) GetPullRequests(org string, repo string) ([]*gogithub.PullRequest, error) {
+	// build context and options for release call...maximum of 100
+	// pull requests per page so going with that for now
+	ctx := context.Background()
+	opt := &gogithub.PullRequestListOptions{
+		State:       "all",
+		ListOptions: gogithub.ListOptions{PerPage: 100},
+	}
+
+	// process all pages until finished
+	var loopCnt = 0
+	var allPullRequests []*gogithub.PullRequest
+	for {
+		// sanity check to stop looking for requests if we hit 1000 (10 pages)
+		loopCnt++
+		if loopCnt > 10 {
+			glog.Warningf("Repository has more than 1000 pull requests: %s/%s", org, repo)
+			break
+		}
+
+		glog.V(2).Infof("Collecting pull requests for %s/%s, count per page = %d, page number = %d", org, repo, opt.PerPage, opt.Page)
+		pullRequests, resp, err := m.GitHubClient.PullRequests.List(ctx, org, repo, opt)
+		if err != nil {
+			return nil, err
+		}
+
+		if glog.V(3) {
+			glog.Infof("Pull requests found: %d", len(pullRequests))
+			for _, pr := range pullRequests {
+				glog.Infof("Pull request found: %s", *pr.Title)
+			}
+		}
+
+		allPullRequests = append(allPullRequests, pullRequests...)
+
+		if resp.NextPage == 0 {
+			break
+		}
+		opt.Page = resp.NextPage
+	}
+	return allPullRequests, nil
 }
 
 // GetTopics retrieves topics by organization/repo
