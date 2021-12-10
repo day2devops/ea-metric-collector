@@ -15,6 +15,7 @@ type Repository struct {
 	ID       int64
 	Org      string
 	Name     string
+	Topics   []string
 	Changed  *time.Time
 	Detail   *gogithub.Repository
 	Branches []*gogithub.Branch
@@ -103,6 +104,15 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		return err
 	})
 
+	var topics []string
+	grp.Go(func() error {
+		t, err := m.GetTopics(org, name)
+		if err == nil {
+			topics = t
+		}
+		return err
+	})
+
 	if err := grp.Wait(); err != nil {
 		return nil, err
 	}
@@ -112,6 +122,7 @@ func (m RepositoryDataCollector) GetRepository(org string, name string) (*Reposi
 		ID:       *ghRepo.ID,
 		Org:      org,
 		Name:     name,
+		Topics:   topics,
 		Changed:  extractLastChangeTS(ghRepo),
 		Detail:   ghRepo,
 		Branches: branches,
@@ -201,6 +212,17 @@ func (m RepositoryDataCollector) GetReleases(org string, repo string) ([]*gogith
 		opt.Page = resp.NextPage
 	}
 	return allReleases, nil
+}
+
+// GetTopics retrieves topics by organization/repo
+func (m RepositoryDataCollector) GetTopics(org string, repo string) ([]string, error) {
+	ctx := context.Background()
+	glog.V(2).Infof("Collecting topics for %s/%s", org, repo)
+	topics, _, err := m.GitHubClient.Repositories.ListAllTopics(ctx, org, repo)
+	if err != nil {
+		return nil, err
+	}
+	return topics, nil
 }
 
 // find repositories change after supplied time using supplied sort (updated, pushed, or created)
